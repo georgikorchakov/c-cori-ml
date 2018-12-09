@@ -1,5 +1,6 @@
 #ifndef _LINEAR_REGRESSION_H
 #define _LINEAR_REGRESSION_H
+
 /**
  * LinearRegression.h
  *

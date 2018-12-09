@@ -20,12 +20,14 @@ LinearRegression_t* LinearRegressionInit(float learning_rate, int number_of_feat
 
     model->learning_rate = learning_rate;
 	model->number_of_features = number_of_features;
-	//model->intercept_ = 0;
+
+	// Initialize model->intercept_ to be random value between 0 and 1
 	model->intercept_ = cori_random();
 
+	// Allocate 
 	model->coef_ = malloc(sizeof(double) * number_of_features);
 	for(int i = 0; i < number_of_features; i++){
-		//model->coef_[i] = 0;
+		// Initialize model->coef_[i] to be random value between 0 and 1
 		model->coef_[i] = cori_random();
 	}
     model->verbose = 0;

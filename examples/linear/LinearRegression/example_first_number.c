@@ -1,19 +1,17 @@
 /**
  * cori-math.h
  *
- * Created: 5/12/2018
+ * Created: 9/12/2018
  * Author: Georgi Korchakov
  */
 
-//#include <c-cori-ml/linear/LinearRegression.h>
-
 #include <stdio.h>
 #include <stdlib.h>
-#include "src/math/cori-math.h"
-#include "src/linear/LinearRegression/LinearRegression.h"
+#include "../../../src/math/cori-math.h"
+#include "../../../src/linear/LinearRegression/LinearRegression.h"
 
 int main(){
-    //{{1,2,3}, {2,1,1}, {4,5,6}, {5,6,3}};
+    // {{1,2,3}, {2,1,1}, {4,5,6}, {5,6,3}};
     Matrix_t* X = MatrixInit(4, 3);
     X->data[0][0] = 1;
     X->data[0][1] = 2;
@@ -31,7 +29,7 @@ int main(){
     X->data[3][1] = 6;
     X->data[3][2] = 3;
 
-    X->Print(X, 4);
+    //X->Print(X, 4);
 
     Vector_t* y = VectorInit(4);
     y->data[0] = 1;
@@ -39,7 +37,7 @@ int main(){
     y->data[2] = 4;
     y->data[3] = 5;
     
-    y->Print(y, 4);
+    //y->Print(y, 4);
 
     // Model
     LinearRegression_t* model = LinearRegressionInit(0.001, 3);
@@ -54,24 +52,3 @@ int main(){
 
     return 0;
 }
-
-// int main(){
-//     Matrix_t* X = MatrixInit(100, 1);
-//     X->FillRandom(X, 0, 10);
-//     X->Print(X, 4);
-
-//     Vector_t* y = VectorInit(100);
-//     VectorFillRandomUsingMatrix(y, X, 3); //TODO Make it usefull
-//     y->Print(y, 4);
-    
-
-//     // Model
-//     LinearRegression_t* model = LinearRegressionInit(0.001, 1);
-//     //model->verbose = 1;
-
-//     printf("Score from fitting function = %f\n", model->Fit(model, X, y));
-//     printf("prediction on first line = %f\n", model->Predict(model, X->data[0]));
-//     printf("Cost = %f\n", model->Cost(model, X, y));
-
-//     return 0;
-// }
