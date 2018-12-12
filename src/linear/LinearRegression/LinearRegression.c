@@ -115,19 +115,28 @@ linear_regression_calc_derivatives(linear_regression_t* model, matrix_t* X, vect
  */
 double
 linear_regression_gradient_descent(linear_regression_t* model, matrix_t* X, vector_t* y){
+	long long int counter = 0;
+	
 	// Get the first (worst) cost of the model
-	double best = linear_regression_cost(model, X, y) * 2;
+	double first_best = linear_regression_cost(model, X, y) * 2;
+	double best = first_best;
 
 	// If model is set to be verbose, print some information
-    if(model->verbose == 1) printf(" First Best: %f\n", best);
+    if(model->verbose == 1) printf("First Best: %f\n", first_best);
 
 	// Initialize new linear_regression_t model, used to store new calculated derivatives
 	linear_regression_t* calculation = linear_regression_init(model->learning_rate, model->number_of_features);
 
 	// Iterate while cost is better than previous
 	while(linear_regression_cost(model, X, y) < best){
+		counter++;
+
 		// If model is set to be verbose, print some information
-		if(model->verbose == 1) printf("----------Best: %f\n", best);
+		if(model->verbose == 1){
+			printf("--------------------\n");
+			printf("%lldth iteration\n", counter);
+			printf("Cost: %f\n", best);
+		}
 
 		// Get new best
 		best = linear_regression_cost(model, X, y);
@@ -140,6 +149,15 @@ linear_regression_gradient_descent(linear_regression_t* model, matrix_t* X, vect
 		for(int i = 0; i < model->number_of_features; i++){
 			model->coef_[i] = model->coef_[i] - calculation->coef_[i] * model->learning_rate;
 		}
+	}
+
+	// If model is set to be verbose, print some information
+	if(model->verbose == 1){
+		printf("\n*******************************\n");
+		printf("* Iterations: %15lld *\n", counter);
+		printf("* First Cost: %15f *\n", first_best);
+		printf("* Best Cost: %16f *\n", best);
+		printf("*******************************\n");
 	}
 
 	return best;
