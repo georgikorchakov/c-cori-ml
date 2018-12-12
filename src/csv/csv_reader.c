@@ -14,7 +14,9 @@ int main(){
 int
 read_csv(char* file_name, matrix_t* X, vector_t* y){
     int fd;
+    int close_err;
     fd = open(file_name, O_RDONLY);
+    if(fd == -1) printf("Open failed!\n");
 
     char buffer[1024];
     char value[1024];
@@ -28,6 +30,7 @@ read_csv(char* file_name, matrix_t* X, vector_t* y){
 
     do{
         rv = read(fd, buffer, sizeof(buffer));
+        if(rv == -1) printf("Read failed!\n");
 
         if(first == 1){
             for(int i = 0; buffer[i] != '\n'; i++){
@@ -41,16 +44,20 @@ read_csv(char* file_name, matrix_t* X, vector_t* y){
             if(buffer[i] == '\n') line++;
 
     }while(rv == sizeof(buffer));
-    close(fd);
+    close_err = close(fd);
+    if(close_err == -1) printf("Close failed!\n");
+
     X = MatrixInit(line+1, features -1);
     y = VectorInit(line+1);
 
     fd = open(file_name, O_RDONLY);
+    if(fd == -1) printf("Open failed!\n");
 
     line = 0;
     feature = 0;
     do{
         rv = read(fd, buffer, sizeof(buffer));
+        if(rv == -1) printf("Read failed!\n");
 
         for(int i = 0; i < rv; i++){
             if(buffer[i] != ',' && buffer[i] != '\n'){
@@ -86,6 +93,7 @@ read_csv(char* file_name, matrix_t* X, vector_t* y){
     X->Print(X, 180);
     y->Print(y, 180);
     close(fd);
+    if(close_err == -1) printf("Close failed!\n");
 
     return 1;
 }
