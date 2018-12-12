@@ -7,28 +7,28 @@
  * Created: 5/12/2018
  * Author: Georgi Korchakov
  */
-typedef struct Matrix_t Matrix_t;
-typedef struct Vector_t Vector_t;
+typedef struct matrix_t matrix_t;
+typedef struct vector_t vector_t;
 
-struct Matrix_t{
+struct matrix_t{
     /*---------- Data ----------*/
     int m;
 	int n;
 	double** data;
 
     /*---------- Pointers to method functions ----------*/
-    void (*FillRandom)(Matrix_t* matrix, int lowest, int highest);
-    void (*Print)(Matrix_t* matrix, int lines);
+    void (*FillRandom)(matrix_t* matrix, int lowest, int highest);
+    void (*Print)(matrix_t* matrix, int lines);
 };
 
-struct Vector_t{
+struct vector_t{
     /*---------- Data ----------*/
     int length;
     double* data;
 
     /*---------- Pointers to method functions ----------*/
-    void (*FillRandom)(Vector_t* vector, int lowest, int highest);
-    void (*Print)(Vector_t* vector, int lines);
+    void (*FillRandom)(vector_t* vector, int lowest, int highest);
+    void (*Print)(vector_t* vector, int lines);
 };
 
 /** @brief Sigmoid math function
@@ -49,25 +49,25 @@ double cori_random();
  */
 double cori_random_between(int lower, int upper);
 
-void VectorFillRandomUsingMatrix(Vector_t* vector, Matrix_t* matrix, int displacement);
+void VectorFillRandomUsingMatrix(vector_t* vector, matrix_t* matrix, int displacement);
 
 void printLine(int n);
 
 /** @brief Initialize Matrix
  *  @param int m, Number of Samples
  *  @param int n, Number of Features
- *  @return Matrix_t*, Pointer to initialized Matrix_t matrix (pointer)
+ *  @return matrix_t*, Pointer to initialized matrix_t matrix (pointer)
  */
-Matrix_t* MatrixInit(int m, int n);
-void MatrixFillRandom(Matrix_t* matrix, int lower, int upper);
-void MatrixPrint(Matrix_t* matrix, int lines);
+matrix_t* MatrixInit(int m, int n);
+void MatrixFillRandom(matrix_t* matrix, int lower, int upper);
+void MatrixPrint(matrix_t* matrix, int lines);
 
 /** @brief Initialize Vector
  *  @param int length, Length of vector
- *  @return Vector_t*, Pointer to initialized Vector_t vector (pointer)
+ *  @return vector_t*, Pointer to initialized vector_t vector (pointer)
  */
-Vector_t* VectorInit(int length);
-void VectorFillRandom(Vector_t* vector, int lower, int upper);
-void VectorPrint(Vector_t* vector, int lines);
+vector_t* VectorInit(int length);
+void VectorFillRandom(vector_t* vector, int lower, int upper);
+void VectorPrint(vector_t* vector, int lines);
 
 #endif // ifndef _CORI_MATH_H

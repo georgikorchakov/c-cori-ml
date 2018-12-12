@@ -12,7 +12,7 @@
 
 int main(){
     // {{1,2,3}, {2,1,1}, {4,5,6}, {5,6,3}};
-    Matrix_t* X = MatrixInit(4, 3);
+    matrix_t* X = MatrixInit(4, 3);
     X->data[0][0] = 1;
     X->data[0][1] = 2;
     X->data[0][2] = 3;
@@ -31,7 +31,7 @@ int main(){
 
     //X->Print(X, 4);
 
-    Vector_t* y = VectorInit(4);
+    vector_t* y = VectorInit(4);
     y->data[0] = 1;
     y->data[1] = 2;
     y->data[2] = 4;
@@ -40,15 +40,15 @@ int main(){
     //y->Print(y, 4);
 
     // Model
-    LinearRegression_t* model = LinearRegressionInit(0.001, 3);
+    linear_regression_t* model = linear_regression_init(0.001, 3);
     //model->verbose = 1;
 
     double x[3] = {3, 4, 5};
 
-    printf("Prediction: %f\n", model->Predict(model, x));
-	printf("Cost: %f\n", model->Cost(model, X, y));
-	printf("Best: %f\n", model->Fit(model, X, y));
-	printf("Prediction: %f\n", model->Predict(model, x));
+    printf("Prediction: %f\n", model->predict(model, x));
+	printf("Cost: %f\n", model->cost(model, X, y));
+	printf("Best: %f\n", model->fit(model, X, y));
+	printf("Prediction: %f\n", model->predict(model, x));
 
     return 0;
 }

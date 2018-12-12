@@ -14,14 +14,16 @@
  *  @param float x, Input number
  *  @return float, Number between 0 and 1
  */
-double sigmoid(double x){
+double
+sigmoid(double x){
     return 1 / (1 + exp(-x));
 }
 
 /** @brief Random function
  *  @return double, Random number between 0 and 1
  */
-double cori_random(){
+double
+cori_random(){
     sranddev();
     return (double)rand()/RAND_MAX;
 }
@@ -31,11 +33,13 @@ double cori_random(){
  *  @param int upper, upper boundary of range
  *  @return double, Random number in the range [lower, upper]
  */
-double cori_random_between(int lower, int upper){
+double
+cori_random_between(int lower, int upper){
     return lower + (upper - lower) * cori_random();
 }
 
-void VectorFillRandomUsingMatrix(Vector_t* vector, Matrix_t* matrix, int displacement){
+void
+VectorFillRandomUsingMatrix(vector_t* vector, matrix_t* matrix, int displacement){
     if(vector->length != matrix->m){
         printf("Number of samples and number of results do not match!\n");
         return;
@@ -51,7 +55,8 @@ void VectorFillRandomUsingMatrix(Vector_t* vector, Matrix_t* matrix, int displac
     }
 }
 
-void printLine(int n){
+void
+printLine(int n){
 	printf("+");
 	for(int i = 0; i < n; i++){
 		printf("----------+");
@@ -61,10 +66,11 @@ void printLine(int n){
 /** @brief Initialize Matrix
  *  @param int m, Number of Samples
  *  @param int n, Number of Features
- *  @return Matrix_t*, Pointer to initialized Matrix_t matrix (pointer)
+ *  @return matrix_t*, Pointer to initialized matrix_t matrix (pointer)
  */
-Matrix_t* MatrixInit(int m, int n){
-    Matrix_t* matrix = malloc(sizeof(*matrix));
+matrix_t*
+MatrixInit(int m, int n){
+    matrix_t* matrix = malloc(sizeof(*matrix));
 
     matrix->data = malloc(m * sizeof(double*));
 	for(int i = 0; i < m; i++){
@@ -86,7 +92,8 @@ Matrix_t* MatrixInit(int m, int n){
     return matrix;
 }
 
-void MatrixFillRandom(Matrix_t* matrix, int lower, int upper){
+void
+MatrixFillRandom(matrix_t* matrix, int lower, int upper){
     for(int i = 0; i < matrix->m; i++){
 		for(int j = 0; j < matrix->n; j++){
 			matrix->data[i][j] = cori_random_between(lower, upper);
@@ -94,7 +101,8 @@ void MatrixFillRandom(Matrix_t* matrix, int lower, int upper){
 	}
 }
 
-void MatrixPrint(Matrix_t* matrix, int lines){
+void
+MatrixPrint(matrix_t* matrix, int lines){
     printLine(matrix->n);
     if(lines > matrix->m) lines = matrix->m;
 
@@ -111,10 +119,11 @@ void MatrixPrint(Matrix_t* matrix, int lines){
 
 /** @brief Initialize Vector
  *  @param int length, Length of vector
- *  @return Vector_t*, Pointer to initialized Vector_t vector (pointer)
+ *  @return vector_t*, Pointer to initialized vector_t vector (pointer)
  */
-Vector_t* VectorInit(int length){
-    Vector_t* vector = malloc(sizeof(*vector));
+vector_t*
+VectorInit(int length){
+    vector_t* vector = malloc(sizeof(*vector));
 
 	vector->data = malloc(length * sizeof(double));
 
@@ -130,13 +139,15 @@ Vector_t* VectorInit(int length){
     return vector;
 }
 
-void VectorFillRandom(Vector_t* vector, int lower, int upper){
+void
+VectorFillRandom(vector_t* vector, int lower, int upper){
     for(int i = 0; i < vector->length; i++){
 		vector->data[i] = cori_random_between(lower, upper);
 	}
 }
 
-void VectorPrint(Vector_t* vector, int lines){
+void
+VectorPrint(vector_t* vector, int lines){
     if(lines > vector->length) lines = vector->length;
 
     for(int i = 0; i < lines; i++){
