@@ -148,7 +148,7 @@ vector_init (int length)
   for (int i = 0; i < length; i++)
     {
       vector->data[i] = 0;
-	}
+    }
 
   vector->fill_random = &vector_fill_random; 
   vector->print = &vector_print;

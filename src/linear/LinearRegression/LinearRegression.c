@@ -101,7 +101,7 @@ linear_regression_calc_derivatives (linear_regression_t *model, matrix_t *X, vec
   for (int i = 0; i < X->m; i++)
     {
       calculation->intercept_ += linear_regression_predict(model, X->data[i]) - y->data[i];
-	}
+    }
   calculation->intercept_ = calculation->intercept_ / X->m;
 
   // Calc derivatives for coefs
@@ -109,11 +109,11 @@ linear_regression_calc_derivatives (linear_regression_t *model, matrix_t *X, vec
     {
       for (int i = 0; i < X->m; i++)
         {
-		  calculation->coef_[j] += (linear_regression_predict(model, X->data[i]) - y->data[i]) * X->data[i][j];
+          calculation->coef_[j] += (linear_regression_predict(model, X->data[i]) - y->data[i]) * X->data[i][j];
         }
-	  calculation->coef_[j] = calculation->coef_[j] / X->m;
+      calculation->coef_[j] = calculation->coef_[j] / X->m;
     }
-	
+
   // Return new model
   return calculation;
 }
@@ -153,18 +153,18 @@ linear_regression_gradient_descent (linear_regression_t *model, matrix_t *X, vec
           fprintf(__stdoutp, "Cost: %f\n", best);
         }
 
-        // Get new best
-        best = linear_regression_cost(model, X, y);
+      // Get new best
+      best = linear_regression_cost(model, X, y);
 
-        // Get new derivatives
-        calculation = linear_regression_calc_derivatives(model, X, y);
+      // Get new derivatives
+      calculation = linear_regression_calc_derivatives(model, X, y);
 
-        // Apply new derivatives to our model
-        model->intercept_ = model->intercept_ - calculation->intercept_ * model->learning_rate;
-        for (int i = 0; i < model->number_of_features; i++)
-          {
-            model->coef_[i] = model->coef_[i] - calculation->coef_[i] * model->learning_rate;
-          }
+      // Apply new derivatives to our model
+      model->intercept_ = model->intercept_ - calculation->intercept_ * model->learning_rate;
+      for (int i = 0; i < model->number_of_features; i++)
+        {
+          model->coef_[i] = model->coef_[i] - calculation->coef_[i] * model->learning_rate;
+        }
     }
 
   // If model is set to be verbose, print some information
