@@ -46,13 +46,13 @@ vector_fill_random_using_matrix (vector_t *vector, matrix_t *matrix, int displac
 {
   if (vector->length != matrix->m)
     {
-      fputs("Number of samples and number of results do not match!\n", __stdoutp);
+      fputs("Number of samples and number of results do not match!\n", stdout);
       return;
     }
 
   if (matrix->n != 1)
     {
-      fputs("There are more than 1 features!\n", __stdoutp);
+      fputs("There are more than 1 features!\n", stdout);
       return;
     }
 
@@ -65,11 +65,11 @@ vector_fill_random_using_matrix (vector_t *vector, matrix_t *matrix, int displac
 void
 print_line (int n)
 {
-  putc('+', __stdoutp);
+  putc('+', stdout);
   for (int i = 0; i < n; i++)
     {
-      fputs("----------+", __stdoutp);
-    }	
+      fputs("----------+", stdout);
+    }
 }
 
 /** @brief Initialize Matrix
@@ -87,10 +87,10 @@ matrix_init (int m, int n)
     {
       matrix->data[i] = malloc(n * sizeof(double));
     }
-    
+
   matrix->m = m;
   matrix->n = n;
-	
+
   for (int i = 0; i < m; i++)
     {
       for (int j = 0; j < n; j++)
@@ -121,15 +121,15 @@ matrix_print (matrix_t *matrix, int lines)
 
   for (int i = 0; i < lines; i++)
     {
-      putc('\n', __stdoutp);
+      putc('\n', stdout);
       for (int j = 0; j < matrix->n; j++)
         {
-          fprintf(__stdoutp, "|%10f", matrix->data[i][j]);
+          fprintf(stdout, "|%10f", matrix->data[i][j]);
         }
-      fputs("|\n", __stdoutp);
+      fputs("|\n", stdout);
       print_line(matrix->n);
     }
-  putc('\n', __stdoutp);
+  putc('\n', stdout);
 }
 
 /** @brief Initialize Vector
@@ -144,7 +144,7 @@ vector_init (int length)
   vector->data = malloc(length * sizeof(double));
 
   vector->length = length;
-	
+
   for (int i = 0; i < length; i++)
     {
       vector->data[i] = 0;
@@ -152,7 +152,7 @@ vector_init (int length)
 
   vector->fill_random = &vector_fill_random; 
   vector->print = &vector_print;
- 
+
   return vector;
 }
 
@@ -160,7 +160,7 @@ void
 vector_fill_random (vector_t *vector, int lower, int upper)
 {
   for (int i = 0; i < vector->length; i++)
-      vector->data[i] = cori_random_between(lower, upper);
+    vector->data[i] = cori_random_between(lower, upper);
 }
 
 void
@@ -171,10 +171,10 @@ vector_print (vector_t *vector, int lines)
   for (int i = 0; i < lines; i++)
     {
       print_line(1);
-      putc('\n', __stdoutp);
-      fprintf(__stdoutp, "|%10f|\n", vector->data[i]);
+      putc('\n', stdout);
+      fprintf(stdout, "|%10f|\n", vector->data[i]);
     }
   print_line (1);
-  putc('\n', __stdoutp);
+  putc('\n', stdout);
 }
 

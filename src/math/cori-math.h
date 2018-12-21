@@ -12,25 +12,25 @@ typedef struct vector_t vector_t;
 
 struct matrix_t
 {
-    /*---------- Data ----------*/
-    int m;
-	int n;
-	double **data;
+  /*---------- Data ----------*/
+  int m;
+  int n;
+  double **data;
 
-    /*---------- Pointers to method functions ----------*/
-    void (*fill_random)(matrix_t *matrix, int lowest, int highest);
-    void (*print)(matrix_t *matrix, int lines);
+  /*---------- Pointers to method functions ----------*/
+  void (*fill_random)(matrix_t *matrix, int lowest, int highest);
+  void (*print)(matrix_t *matrix, int lines);
 };
 
 struct vector_t
 {
-    /*---------- Data ----------*/
-    int length;
-    double *data;
+  /*---------- Data ----------*/
+  int length;
+  double *data;
 
-    /*---------- Pointers to method functions ----------*/
-    void (*fill_random)(vector_t *vector, int lowest, int highest);
-    void (*print)(vector_t *vector, int lines);
+  /*---------- Pointers to method functions ----------*/
+  void (*fill_random)(vector_t *vector, int lowest, int highest);
+  void (*print)(vector_t *vector, int lines);
 };
 
 /** @brief Sigmoid math function
