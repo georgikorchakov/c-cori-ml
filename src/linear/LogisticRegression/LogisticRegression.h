@@ -16,8 +16,8 @@ struct logistic_regression_t{
   float learning_rate;
   int verbose;
 
-  double* coef_;
-  double intercept_;
+  double* coef;
+  double intercept;
 
   /*---------- Pointers to method functions ----------*/
 

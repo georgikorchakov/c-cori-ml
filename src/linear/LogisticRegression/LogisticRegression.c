@@ -24,14 +24,14 @@ logistic_regression_init (float learning_rate, int number_of_features)
   model->learning_rate = learning_rate;
   model->number_of_features = number_of_features;
 
-  // model->intercept_ = cori_random();
-  model->intercept_ = 0;
+  // model->intercept = cori_random();
+  model->intercept = 0;
 
-  model->coef_ = malloc(sizeof(double) * number_of_features);
+  model->coef = malloc(sizeof(double) * number_of_features);
   for (int i = 0; i < number_of_features; i++)
     {
-      // model->coef_[i] = cori_random();
-      model->coef_[i] = 0;
+      // model->coef[i] = cori_random();
+      model->coef[i] = 0;
     }
 
   model->verbose = 0;
@@ -52,10 +52,10 @@ logistic_regression_init (float learning_rate, int number_of_features)
 double
 logistic_regression_predict (logistic_regression_t *model, double *x)
 {
-  double y = model->intercept_;
+  double y = model->intercept;
   for (int i = 0; i < model->number_of_features; i++)
     {
-      y += model->coef_[i] * x[i];
+      y += model->coef[i] * x[i];
     }
 
   return logistic_regression_sigmoid(y);
@@ -104,21 +104,21 @@ logistic_regression_calc_derivatives (logistic_regression_t *model,
   // Calc derivative for intercept
   for (int i = 0; i < X->m; i++)
     {
-      calculation->intercept_ +=
+      calculation->intercept +=
         logistic_regression_predict(model, X->data[i]) - y->data[i];
     }
-  calculation->intercept_ = calculation->intercept_ / X->m;
+  calculation->intercept = calculation->intercept / X->m;
 
   // Calc derivatives for coefs
   for (int j = 0; j < X->n; j++)
     {
       for (int i = 0; i < X->m; i++)
         {
-          calculation->coef_[j] +=
+          calculation->coef[j] +=
             (logistic_regression_predict(model, X->data[i]) - y->data[i]) *
             X->data[i][j];
         }
-      calculation->coef_[j] = calculation->coef_[j] / X->m;
+      calculation->coef[j] = calculation->coef[j] / X->m;
     }
 
   return calculation;
@@ -137,8 +137,8 @@ logistic_regression_gradient_descent (logistic_regression_t *model,
   long long int counter = 0;
 
   // Get the first (worst) cost of the model
-  double first_best = logistic_regression_cost(model, X, y) * 2;
-  double best = first_best;
+  double first_best = logistic_regression_cost(model, X, y);
+  double best = first_best * 2;
 
   if (model->verbose == 1) fprintf(stdout, "First Best: %f\n", first_best);
 
@@ -155,7 +155,14 @@ logistic_regression_gradient_descent (logistic_regression_t *model,
         {
           fputs("--------------------\n", stdout);
           fprintf(stdout, "%lldth iteration\n", counter);
-          fprintf(stdout, "Cost: %f\n", best);
+          if (counter == 1)
+            {
+              fprintf(stdout, "Cost: %f\n", first_best);
+            }
+          else
+            {
+              fprintf(stdout, "Cost: %f\n", best);
+            }
         }
 
       best = logistic_regression_cost(model, X, y);
@@ -164,12 +171,12 @@ logistic_regression_gradient_descent (logistic_regression_t *model,
       calculation = logistic_regression_calc_derivatives(model, X, y);
 
       // Apply new derivatives to our model
-      model->intercept_ = model->intercept_ -
-        calculation->intercept_ * model->learning_rate;
+      model->intercept = model->intercept -
+        calculation->intercept * model->learning_rate;
       for (int i = 0; i < model->number_of_features; i++)
         {
-          model->coef_[i] = model->coef_[i] -
-            calculation->coef_[i] * model->learning_rate;
+          model->coef[i] = model->coef[i] -
+            calculation->coef[i] * model->learning_rate;
         }
 
       //TODO Make it a better way
