@@ -29,12 +29,19 @@ struct logistic_regression_t{
    */
   double (*fit)(logistic_regression_t *model, matrix_t *X, vector_t *y);
 
-  /** @brief Gives a prediction for specific data
+  /** @brief Gives a rounded prediction (0 or 1) for specific data
    *  @param logistic_regression_t *model, logistic regression struct (pointer)
    *  @param double *x, data for prediction
-   *  @return double, prediction
+   *  @return double, rounded prediction (0 or 1)
    */
   double (*predict)(logistic_regression_t *model, double *x);
+
+  /** @brief Gives a prediction (probability) for specific data
+   *  @param logistic_regression_t *model, logistic regression struct (pointer)
+   *  @param double *x, data for prediction
+   *  @return double, prediction (probability)
+   */
+  double (*predict_proba)(logistic_regression_t *model, double *x);
 
   /** @brief Cost Function for logistic regression
    *  @param logistic_regression_t *model, logistic regression struct (pointer)
@@ -55,13 +62,21 @@ logistic_regression_t*
 logistic_regression_init(float learning_rate,
                          int number_of_features);
 
-/** @brief Gives a prediction for specific data
+/** @brief Gives a prediction (probability) for specific data
  *  @param logistic_regression_t *model, logistic regression struct (pointer)
  *  @param double *x, data for prediction
- *  @return double, prediction
+ *  @return double, prediction (probability)
  */
 double
 logistic_regression_predict (logistic_regression_t *model, double *x);
+
+/** @brief Gives a rounded prediction (0 or 1) for specific data
+ *  @param logistic_regression_t *model, logistic regression struct (pointer)
+ *  @param double *x, data for prediction
+ *  @return double, rounded prediction (0 or 1)
+ */
+double
+logistic_regression_predict_rounded (logistic_regression_t *model, double *x);
 
 /** @brief Cost Function for logistic regression
  *  @param logistic_regression_t *model, logistic regression struct (pointer)

@@ -38,16 +38,19 @@ logistic_regression_init (float learning_rate, int number_of_features)
 
   // Initialize method functions
   model->fit = &logistic_regression_gradient_descent;
-  model->predict = &logistic_regression_predict;
+  // Predict 0 or 1
+  model->predict = &logistic_regression_predict_rounded;
+  // Predict Probability
+  model->predict_proba = &logistic_regression_predict;
   model->cost = &logistic_regression_cost;
 
   return model;
 }
 
-/** @brief Gives a prediction for specific data
+/** @brief Gives a prediction (probability) for specific data
  *  @param logistic_regression_t *model, logistic regression struct (pointer)
  *  @param double *x, data for prediction
- *  @return double, prediction
+ *  @return double, prediction (probability)
  */
 double
 logistic_regression_predict (logistic_regression_t *model, double *x)
@@ -59,6 +62,25 @@ logistic_regression_predict (logistic_regression_t *model, double *x)
     }
 
   return logistic_regression_sigmoid(y);
+}
+
+/** @brief Gives a rounded prediction (0 or 1) for specific data
+ *  @param logistic_regression_t *model, logistic regression struct (pointer)
+ *  @param double *x, data for prediction
+ *  @return double, rounded prediction (0 or 1)
+ */
+double
+logistic_regression_predict_rounded (logistic_regression_t *model, double *x)
+{
+  double y = logistic_regression_predict (model, x);
+  if (y < 0.5)
+    {
+      return 0;
+    }
+  else
+    {
+      return 1;
+    }
 }
 
 /** @brief Cost Function for logistic regression
