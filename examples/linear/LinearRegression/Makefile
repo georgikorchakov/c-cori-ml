@@ -1,11 +1,14 @@
 CC = gcc
-SOURCE = example.c
-DEP = ../../../src/math/cori-math.c ../../../src/linear/LinearRegression/LinearRegression.c
-TARGET = example_first_number example_random
 CFLAGS = -Wall --pedantic -std=c11
+
+DEP = ../../../src/math/cori-math.c ../../../src/linear/LinearRegression/LinearRegression.c
+
 OBJECTS = cori-math.o LinearRegression.o example_first_number.o example_random.o
 OBJECTS_FN = cori-math.o LinearRegression.o example_first_number.o
 OBJECTS_R = cori-math.o LinearRegression.o example_random.o
+
+TARGET_FN = example_first_number
+TARGET_R = example_random
 
 all: main clean 
 
@@ -22,11 +25,11 @@ example_random.o: example_random.c
 	$(CC) $(CFLAGS) -c example_random.c
 
 main: $(OBJECTS)
-	$(CC) $(CFLAGS) -o example_random $(OBJECTS_R)
-	$(CC) $(CFLAGS) -o example_first_number $(OBJECTS_FN)
+	$(CC) $(CFLAGS) -o $(TARGET_R) $(OBJECTS_R)
+	$(CC) $(CFLAGS) -o $(TARGET_FN) $(OBJECTS_FN)
 
 clean:
 	rm $(OBJECTS)
 
 cleanall:
-	rm $(OBJECTS) $(TARGET)
+	rm $(OBJECTS) $(TARGET_R) $(TARGET_FN)
