@@ -39,7 +39,10 @@ int main(){
   printf("Cost: %f\n", model->cost(model, X, y));
   printf("Best: %f\n", model->fit(model, X, y));
   printf("Prediction on 0: %f\n", model->predict(model, x1));
+  printf("Probability on 0: %f\n", model->predict_proba(model, x1));
+
   printf("Prediction on 1: %f\n", model->predict(model, x2));
+  printf("Probability on 1: %f\n", model->predict_proba(model, x2));
 
   return 0;
 }
