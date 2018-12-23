@@ -16,7 +16,12 @@ int main(){
   X->print(X, 4);
 
   vector_t* y = vector_init(100);
-  vector_fill_random_using_matrix(y, X, 3); //TODO Make it usefull
+
+  for (int i = 0; i < y->length; i++)
+    {
+      y->data[i] = 3 * X->data[i][0] + cori_random();
+    }
+
   y->print(y, 4);
 
   // Model
@@ -24,7 +29,7 @@ int main(){
   model->verbose = 1;
 
   printf("Score from fitting function = %f\n", model->fit(model, X, y));
-  printf("prediction on first line = %f\n", model->predict(model, X->data[0]));
+  printf("Prediction on first line = %f\n", model->predict(model, X->data[0]));
   printf("Cost = %f\n", model->cost(model, X, y));
 
   return 0;
