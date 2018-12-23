@@ -51,8 +51,6 @@ double cori_random();
  */
 double cori_random_between(int lower, int upper);
 
-void vector_fill_random_using_matrix(vector_t *vector, matrix_t *matrix, int displacement);
-
 void print_line(int n);
 
 /** @brief Initialize Matrix

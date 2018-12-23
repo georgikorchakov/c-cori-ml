@@ -42,27 +42,6 @@ cori_random_between (int lower, int upper)
 }
 
 void
-vector_fill_random_using_matrix (vector_t *vector, matrix_t *matrix, int displacement)
-{
-  if (vector->length != matrix->m)
-    {
-      fputs("Number of samples and number of results do not match!\n", stdout);
-      return;
-    }
-
-  if (matrix->n != 1)
-    {
-      fputs("There are more than 1 features!\n", stdout);
-      return;
-    }
-
-  for (int i = 0; i < vector->length; i++)
-    {
-      vector->data[i] = displacement * matrix->data[i][0] + cori_random();
-    }
-}
-
-void
 print_line (int n)
 {
   putc('+', stdout);
