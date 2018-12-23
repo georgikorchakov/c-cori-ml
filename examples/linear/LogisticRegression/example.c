@@ -29,7 +29,7 @@ int main(){
   //y->print(y, 4);
 
   // Model
-  logistic_regression_t* model = logistic_regression_init(0.01, 1);
+  logistic_regression_t* model = logistic_regression_init(0.1, 1);
   model->verbose = 1;
 
   double x1[1] = {0};
