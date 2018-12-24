@@ -20,6 +20,8 @@ get_csv_dimentions (char *filename)
   int first_iteration = 1;
   char buffer[1024];
   dimentions_t dim;
+  dim.m = 0;
+  dim.n = 0;
   fd = open(filename, O_RDONLY);
 
   do
