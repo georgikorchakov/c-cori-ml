@@ -51,6 +51,8 @@ struct logistic_regression_t{
    */
   double (*cost)(logistic_regression_t *model, matrix_t *X, vector_t *y);
 
+  double (*score)(logistic_regression_t *model, matrix_t *X, vector_t *y);
+
 };
 
 /** @brief Initialize logistic regression
@@ -107,6 +109,10 @@ logistic_regression_calc_derivatives (logistic_regression_t *model,
 double
 logistic_regression_gradient_descent (logistic_regression_t *model,
                                       matrix_t *X, vector_t *y);
+
+double
+logistic_regression_score (logistic_regression_t *model,
+                           matrix_t *X, vector_t *y);
 
 /** @brief Sigmoid math function
  *  @param double x, Input number

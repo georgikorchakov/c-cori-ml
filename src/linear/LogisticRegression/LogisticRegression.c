@@ -43,6 +43,7 @@ logistic_regression_init (float learning_rate, int number_of_features)
   // Predict Probability
   model->predict_proba = &logistic_regression_predict;
   model->cost = &logistic_regression_cost;
+  model->score = &logistic_regression_score;
 
   return model;
 }
@@ -218,6 +219,20 @@ logistic_regression_gradient_descent (logistic_regression_t *model,
     }
 
   return best;
+}
+
+double
+logistic_regression_score (logistic_regression_t *model,
+                           matrix_t *X, vector_t *y)
+{
+  double score = 0;
+  for (int i = 0; i < y->length; i++)
+    {
+      if (logistic_regression_predict_rounded(model, X->data[i]) == y->data[i])
+        ++score;
+    }
+
+  return score / y->length;
 }
 
 /** @brief Sigmoid math function
