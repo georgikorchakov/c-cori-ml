@@ -8,17 +8,218 @@
 #include "../math/cori-math.h"
 #include "csv_reader.h"
 
-int main(){
-  matrix_t *X = NULL;
-  vector_t *y = NULL;
-  read_csv("iris.data", &X, &y);
+/** @brief Gets dimentions of given csv file
+ *  @param char *filename, Name of csv file
+ *  @return dimentions_t, struct with m (cols) and n (rows) of given csv file
+ */
+dimentions_t
+get_csv_dimentions (char *filename)
+{
+  int fd;
+  int size;
+  int first_iteration = 1;
+  char buffer[1024];
+  dimentions_t dim;
+  fd = open(filename, O_RDONLY);
 
-  X->print(X, 180);
-  y->print(y, 180);
+  do
+    {
+      size = read(fd, buffer, sizeof(buffer));
+      if (size == -1) fputs("Read failed!\n", stdout);
 
-  return 0;
+      if (first_iteration == 1)
+        {
+          for (int i = 0; buffer[i] != '\n'; i++)
+            if (buffer[i] == ',') ++dim.n;
+          dim.n += 1;
+          first_iteration = 0;
+        }
+
+      for (int i = 0; i < size; i++)
+        if (buffer[i] == '\n') ++dim.m;
+
+    } 
+  while (size == sizeof(buffer));
+
+  return dim;
 }
 
+/** @brief Gets only the features of given csv file
+ *  @param char *filename, Name of csv file
+ *  @param int label_position, position of your column containing labels
+ *  @param dimentions_t dim, dimentions of that csv file
+ *  @return matrix_t*, matrix pointer with all features, without labels
+ */
+matrix_t*
+get_csv_features (char *filename, int label_position, dimentions_t dim)
+{
+  int fd;
+  int size;
+  char buffer[1024];
+  fd = open(filename, O_RDONLY);
+
+  matrix_t *X = matrix_init(dim.m, dim.n - 1);
+
+  char value_buffer[1024];
+  int value_pos = 0;
+  double value = 0;
+
+  // For strings in csv
+  char strings_buffer[100][40];
+  int strings_count = 0;
+  int string_position = 0;
+
+  int line = 0;
+  int position = 0;
+
+  do
+    {
+      size = read(fd, buffer, sizeof(buffer));
+      if (size == -1) fputs("Read failed!\n", stdout);
+
+      for (int i = 0; i < size; i++)
+        {
+          if (buffer[i] != ',' && buffer[i] != '\n')
+            {
+              value_buffer[value_pos] = buffer[i];
+              ++value_pos;
+            }
+          else
+            {
+              value_buffer[value_pos] = '\0';
+
+              if (is_number(value_buffer))
+                {
+                  sscanf(value_buffer, "%lf", &value);
+                }
+              else
+                {
+                  string_position = in_arr(strings_buffer, value_buffer);
+                  if (string_position == -1)
+                    {
+                      strcpy(strings_buffer[strings_count], value_buffer);
+                      value = strings_count;
+                      ++strings_count;
+                    }
+                  else
+                    {
+                      value = string_position;
+                    }
+                }
+
+              if (position != label_position)
+                {
+                  X->data[line][position] = value;
+                }
+
+              if (buffer[i] == '\n')
+                {
+                  ++line;
+                  position = 0;
+                }
+
+              if (buffer[i] == ',')
+                ++position;
+
+              value_pos = 0;
+            }
+        }
+    } 
+  while (size == sizeof(buffer));
+
+  return X;
+}
+
+/** @brief Gets only the laels of given csv file
+ *  @param char *filename, Name of csv file
+ *  @param int label_position, position of your column containing labels
+ *  @param dimentions_t dim, dimentions of that csv file
+ *  @return vector_t*, vector pointer with all labels, without features
+ */
+vector_t*
+get_csv_labels (char *filename, int label_position, dimentions_t dim)
+{
+  int fd;
+  int size;
+  char buffer[1024];
+  fd = open(filename, O_RDONLY);
+
+  vector_t *y = vector_init(dim.m);
+
+  char value_buffer[1024];
+  int value_pos = 0;
+  double value = 0;
+
+  // For strings in csv
+  char strings_buffer[100][40];
+  int strings_count = 0;
+  int string_position = 0;
+
+  int line = 0;
+  int position = 0;
+
+  do
+    {
+      size = read(fd, buffer, sizeof(buffer));
+      if (size == -1) fputs("Read failed!\n", stdout);
+
+      for (int i = 0; i < size; i++)
+        {
+          if (buffer[i] != ',' && buffer[i] != '\n')
+            {
+              value_buffer[value_pos] = buffer[i];
+              ++value_pos;
+            }
+          else
+            {
+              value_buffer[value_pos] = '\0';
+
+              if (is_number(value_buffer))
+                {
+                  sscanf(value_buffer, "%lf", &value);
+                }
+              else
+                {
+                  string_position = in_arr(strings_buffer, value_buffer);
+                  if (string_position == -1)
+                    {
+                      strcpy(strings_buffer[strings_count], value_buffer);
+                      value = strings_count;
+                      ++strings_count;
+                    }
+                  else
+                    {
+                      value = string_position;
+                    }
+                }
+
+              if (position == label_position)
+                {
+                  y->data[line] = value;
+                }
+
+              if (buffer[i] == '\n')
+                {
+                  ++line;
+                  position = 0;
+                }
+
+              if (buffer[i] == ',')
+                ++position;
+
+              value_pos = 0;
+            }
+        }
+    } 
+  while (size == sizeof(buffer));
+
+  return y;
+}
+
+/** @brief Checks whether a string is a number
+ *  @param char *str, string for checking
+ *  @return int, 0 - not a numberm 1 - number
+ */
 int
 is_number (char *str)
 {
@@ -34,8 +235,13 @@ is_number (char *str)
   return 1;
 }
 
+/** @brief Search in array whit strings for given string
+ *  @param str_arr[100][40], array whit strings
+ *  @param char *str, string to search for
+ *  @return int, position of given string or -1 if there is no string like this
+ */
 int
-in_arr(char str_arr[100][40], char *str)
+in_arr (char str_arr[100][40], char *str)
 {
   for (int i = 0; i < 100; i++)
     {
@@ -48,127 +254,3 @@ in_arr(char str_arr[100][40], char *str)
   return -1;
 }
 
-int
-read_csv(char *file_name, matrix_t **X, vector_t **y)
-{
-  int fd;
-  int close_err;
-  int rv;
-
-  fd = open(file_name, O_RDONLY);
-  if(fd == -1) fputs("Open failed!\n", stdout);
-
-  char buffer[1024];
-  char value[1024];
-  float real_value = 0;
-  int value_pos = 0;
-
-  int line = 0;
-  int features = 1;
-  int feature = 0;
-  int first = 1;
-
-  // For strings in csv
-  char strings[100][40];
-  int count_str = 0;
-  int pos = 0;
-
-  // Count number of samples and number of features
-  do
-    {
-      rv = read(fd, buffer, sizeof(buffer));
-      if(rv == -1) fputs("Read failed!\n", stdout);
-
-      if(first == 1)
-        {
-          for(int i = 0; buffer[i] != '\n'; i++)
-              if(buffer[i] == ',') ++features;
-          first = 0;
-        }
-
-      for(int i = 0; i < rv; i++)
-          if(buffer[i] == '\n') ++line;
-
-    } 
-  while (rv == sizeof(buffer));
-
-  close_err = close(fd);
-  if(close_err == -1) fputs("Close failed!\n", stdout);
-
-  // Initialize matrix and vector
-  *X = matrix_init(line, features -1);
-  *y = vector_init(line);
-
-  fd = open(file_name, O_RDONLY);
-  if(fd == -1) fputs("Open failed!\n", stdout);
-
-  line = 0;
-  feature = 0;
-
-  do
-    {
-      rv = read(fd, buffer, sizeof(buffer));
-      if(rv == -1) fputs("Read failed!\n", stdout);
-
-      for(int i = 0; i < rv; i++)
-        {
-          if(buffer[i] != ',' && buffer[i] != '\n')
-            {
-              value[value_pos] = buffer[i];
-              ++value_pos;
-            }
-          else
-            {
-              value[value_pos] = '\0';
-
-              if ( is_number(value) )
-                {
-                  sscanf(value, "%f", &real_value);
-                }
-              else
-                {
-                  pos = in_arr(strings, value);
-                  if (pos == -1)
-                    {
-                      strcpy(strings[count_str], value);
-                      real_value = count_str;
-                      ++count_str;
-                    }
-                  else
-                    {
-                      real_value = pos;
-                    }
-                }
-
-              if(feature == features - 1)
-                {
-                  (*y)->data[line] = real_value;
-                }
-              else
-                {
-                  (*X)->data[line][feature] = real_value;
-                }
-
-              if (buffer[i] == '\n')
-                {
-                  ++line;
-                  feature = 0;
-                  value_pos = 0;
-                }
-              if(buffer[i] == ',')
-                {
-                  ++feature;
-                  value_pos = 0;
-                }
-
-            }
-        }
-
-    }
-  while (rv == sizeof(buffer));
-
-  close(fd);
-  if(close_err == -1) fputs("Close failed!\n", stdout);
-
-  return 1;
-}
