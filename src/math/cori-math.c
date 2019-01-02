@@ -10,6 +10,10 @@
 #include <stdio.h>
 #include "cori-math.h"
 
+/*  Used for random seeds  */
+#include <sys/time.h>
+#include <unistd.h>
+
 /** @brief Sigmoid math function
  *  @param float x, Input number
  *  @return float, Number between 0 and 1
@@ -26,7 +30,9 @@ sigmoid (double x)
 double
 cori_random ()
 {
-  sranddev();
+  struct timeval t;
+  gettimeofday(&t, NULL);
+  srand(t.tv_usec * t.tv_sec * getpid() / getppid());
   return (double)rand() / RAND_MAX;
 }
 
